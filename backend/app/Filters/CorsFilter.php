@@ -14,13 +14,15 @@ class CorsFilter implements FilterInterface
         header("Access-Control-Allow-Origin: *");
 
         // Allow certain methods
-        header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+        header("Access-Control-Allow-Methods: OPTIONS, GET, POST, PUT, DELETE, OPTIONS");
 
         // Allow certain headers
         header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-        // Handle preflight requests
-        if ($request->getMethod() === 'options') {
+        // Max age for caching the preflight response
+        header("Access-Control-Max-Age: 86400");
+
+        if ($request->getMethod() === 'OPTIONS') {
             header('HTTP/1.1 200 OK');
             exit;
         }

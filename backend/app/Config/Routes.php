@@ -7,7 +7,8 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Home::index');
 
-$routes->group('api', function ($routes) {
+$routes->group('api' , function ($routes) {
+    $routes->OPTIONS('menu/update/(:segment)', 'MenuController::update/$1');  // Update menu item
     $routes->get('menus', 'MenuController::index');  // Get all menus hierarchically
     $routes->get('menu/(:segment)', 'MenuController::show/$1');  // Get specific menu by ID
     $routes->get('menu/hierarchy/(:segment)', 'MenuController::showHierarchy/$1');  // Get menu hierarchy for a specific item
@@ -17,7 +18,3 @@ $routes->group('api', function ($routes) {
     $routes->delete('menu/delete/(:segment)', 'MenuController::delete/$1');  // Delete menu item
 });
 
-
-$routes->get('test-cors', function() {
-    return $this->response->setJSON(['message' => 'CORS is working']);
-});

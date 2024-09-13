@@ -69,11 +69,6 @@ class MenuController extends ResourceController
 
     public function update($id = null)
     {
-        // Handle preflight requests
-        if ($this->request->getMethod() === 'options') {
-            header('HTTP/1.1 200 OK');
-            exit;
-        }
         $menuModel = new MenuModel();
         $data = $this->request->getJSON(true);
 

@@ -5,22 +5,30 @@ export const fetchMenu = async () => {
 };
 
 export const updateMenu = async (menuData) => {
-  console.log(menuData)
-  const newData = {
-    name: menuData.name
-  }
-  const response = await fetch(`http://localhost:8080/api/menu/update/${menuData.id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(newData),
-  });
+  try {
+    const newData = {
+      name: menuData.name
+    };
 
-  if (!response.ok) {
-    const errorMsg = await response.text();
-    throw new Error(errorMsg || "Failed to update menu item.");
-  }
+    const response = await fetch(`http://localhost:8080/api/menu/update/${menuData.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newData),
+    });
 
-  return response.json();
+    if (!response.ok) {
+      const errorMsg = await response.text();
+      console.error('Error response:', errorMsg);
+      throw new Error(errorMsg || "Failed to update menu item.");
+    }
+
+    const result = await response.json();
+    console.log('Update successful:', result);
+    return result;
+  } catch (error) {
+    console.error('Update failed:', error.message);
+    throw error;
+  }
 };
