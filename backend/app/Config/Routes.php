@@ -8,6 +8,7 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'Home::index');
 
 $routes->group('api' , function ($routes) {
+    $routes->OPTIONS('menu/save', 'MenuController::save');  // Update menu item
     $routes->OPTIONS('menu/update/(:segment)', 'MenuController::update/$1');  // Update menu item
     $routes->get('menus', 'MenuController::index');  // Get all menus hierarchically
     $routes->get('menu/(:segment)', 'MenuController::show/$1');  // Get specific menu by ID

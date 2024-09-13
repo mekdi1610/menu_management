@@ -43,6 +43,16 @@ class MenuController extends ResourceController
 
     public function save()
     {
+        // Handle preflight requests
+
+        if ($this->request->getMethod() === 'OPTIONS') {
+            $this->response->setStatusCode(200);
+            $this->response->setHeader('Access-Control-Allow-Origin', '*');
+            $this->response->setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PUT, DELETE, OPTIONS');
+            $this->response->setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+            $this->response->send();
+            return;
+        }
         $menuModel = new MenuModel();
         $data = $this->request->getJSON(true);
 
@@ -69,8 +79,24 @@ class MenuController extends ResourceController
 
     public function update($id = null)
     {
+        // Handle preflight requests
+
+        if ($this->request->getMethod() === 'OPTIONS') {
+            $this->response->setStatusCode(200);
+            $this->response->setHeader('Access-Control-Allow-Origin', '*');
+            $this->response->setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PUT, DELETE, OPTIONS');
+            $this->response->setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+            $this->response->send();
+            return;
+        }
+
+        log_message('info', 'On update');
+
         $menuModel = new MenuModel();
         $data = $this->request->getJSON(true);
+
+        log_message('info', print_r($data, true));
+
 
         if ($data === null) {
             return $this->failValidationError('Failed to read JSON data.');

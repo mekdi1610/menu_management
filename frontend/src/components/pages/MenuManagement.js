@@ -8,7 +8,6 @@ import MenuDetails from "../molecules/MenuDetails";
 import { useRecoilState } from "recoil";
 import { selectedMenuItemState } from "../../recoil/atoms";
 import { FolderIcon, ViewGridIcon } from "@heroicons/react/solid";
-import { InsideMenuItem } from "../molecules/InsideMenuItem";
 
 export const MenuManagement = () => {
   const [selectedMenuItem, setSelectedMenuItem] = useRecoilState(selectedMenuItemState);
@@ -32,43 +31,16 @@ export const MenuManagement = () => {
     loadMenuData();
   }, []);
 
-  const handleAddNewMenu = (parentItem, newMenuItem) => {
-    const addMenuItem = (items) =>
-      items.map((item) => {
-        if (item.id === parentItem.id) {
-          return { ...item, children: [...item.children, newMenuItem] };
-        }
-        if (item.children && item.children.length > 0) {
-          return { ...item, children: addMenuItem(item.children) };
-        }
-        return item;
-      });
 
-    setMenuData(addMenuItem(menuData));
-  };
-
-  const toggleExpand = (menuItemId) => {
-  };
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading menu data: {error.message}</p>;
-
-  const selectedMenuDetails = menuData.find((menu) => menu.id === selectedMenuItem) || {};
 
   return (
     <MainLayout
       sidebar={
         <div>
           <MenuTree menu={menuData} />
-          {menuData.map((menuItem) => (
-            <InsideMenuItem
-              key={menuItem.id}
-              item={menuItem}
-              expanded={menuItem.expanded || false}
-              toggleExpand={toggleExpand}
-              onAddNewMenu={handleAddNewMenu}
-            />
-          ))}
         </div>
       }
       main={

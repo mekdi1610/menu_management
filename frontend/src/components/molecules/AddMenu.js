@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import TextInput from "../atoms/TextInput";
 import { Button } from "../atoms/Button";
-import { updateMenu, addMenu } from "../../hooks/useMenuData"; // Assume addMenu is the function for adding new items
+import { addMenu } from "../../hooks/useMenuData"; // Assume addMenu is the function for adding new items
 
-const MenuDetails = ({ selectedMenuItem }) => {
+const AddMenu = ({ addNew, selectedMenuItem }) => {
   const [menuData, setMenuData] = useState({
     id: "",
     depth: "",
@@ -16,23 +16,18 @@ const MenuDetails = ({ selectedMenuItem }) => {
   const [success, setSuccess] = useState(null);
 
   useEffect(() => {
-    if (selectedMenuItem) {
+    if (addNew && selectedMenuItem) {
+        console.log(selectedMenuItem)
       setMenuData({
-        id: selectedMenuItem.id,
-        depth: selectedMenuItem.depth,
-        parent_id: selectedMenuItem.parent_id,
-        name: selectedMenuItem.name,
-      });
-    } else {
-      // Reset to default for adding new item
-      setMenuData({
-        id: "",
-        depth: "",
-        parent_id: "",
+        ...menuData,
+        parent_id: selectedMenuItem.id,
+        depth: Number(selectedMenuItem.depth) ? Number(selectedMenuItem.depth) + 1 : 1,
         name: "",
       });
+    } else if (!addNew && selectedMenuItem) {
+      setMenuData(selectedMenuItem);
     }
-  }, [selectedMenuItem]);
+  }, [addNew, selectedMenuItem]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -49,7 +44,7 @@ const MenuDetails = ({ selectedMenuItem }) => {
 
     try {
       if (menuData.id) {
-        await updateMenu(menuData);
+        await addMenu(menuData);
         setSuccess("Menu item updated successfully.");
       } else {
         await addMenu(menuData);
@@ -64,11 +59,10 @@ const MenuDetails = ({ selectedMenuItem }) => {
 
   return (
     <div className="w-full p-8">
-      {selectedMenuItem ? (
+      {addNew ? (
         <>
-          <TextInput label="Menu ID" value={menuData.id} disabled />
-          <TextInput label="Depth" value={menuData.depth} disabled />
-          <TextInput label="Parent ID" value={menuData.parent_id} disabled />
+          <TextInput label="Depth" name="depth" value={menuData.depth} onChange={handleChange} />
+          <TextInput label="Parent ID" name="parent_id" value={menuData.parent_id} onChange={handleChange} />
           <TextInput
             label="Name"
             name="name"
@@ -76,17 +70,17 @@ const MenuDetails = ({ selectedMenuItem }) => {
             onChange={handleChange}
           />
           <Button onClick={handleSave} disabled={loading}>
-            {loading ? "Saving..." : "Save"}
+            {loading ? "Saving..." : "Add Menu Item"}
           </Button>
 
           {error && <p className="text-red-500">{error}</p>}
           {success && <p className="text-green-500">{success}</p>}
         </>
       ) : (
-        <p>Please select a menu item to view details.</p>
+        <p>Menu Item</p>
       )}
     </div>
   );
 };
 
-export default MenuDetails;
+export default AddMenu;

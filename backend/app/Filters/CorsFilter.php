@@ -22,6 +22,11 @@ class CorsFilter implements FilterInterface
         // Max age for caching the preflight response
         header("Access-Control-Max-Age: 86400");
 
+        // Handle preflight requests
+        if ($request->getServer('REQUEST_METHOD') === 'OPTIONS') {
+            header('HTTP/1.1 200 OK');
+            exit;
+        }
         if ($request->getMethod() === 'OPTIONS') {
             header('HTTP/1.1 200 OK');
             exit;

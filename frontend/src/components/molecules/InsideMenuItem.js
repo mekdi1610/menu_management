@@ -6,38 +6,40 @@ export const InsideMenuItem = ({
   expanded,
   toggleExpand,
   onAddNewMenu,
+  onMenuItemClick,
+  onAddNewClick,
 }) => {
-  const hasChildren = item.children && item.children.length > 0;
+  const hasChildren = Array.isArray(item.children) && item.children.length > 0;
 
-  // Add new menu item when clicking the PlusIcon
   const handleAddNewClick = () => {
     const newMenuItem = {
-      id: new Date().getTime(),
-      name: "New Menu Item",
+      id: "",
+      name: "",
       depth: (item.depth || 1) + 1,
       parent_id: item.id,
       children: [],
     };
-
+    onAddNewMenu(item, newMenuItem);
+    onAddNewClick(item); // Pass the clicked menu item to the handler
   };
 
   return (
     <div className="ml-4">
-      <div className="flex items-center cursor-pointer">
+      <div className="flex items-center cursor-pointer" onClick={() => onMenuItemClick(item)}>
         {hasChildren ? (
           expanded ? (
             <ChevronDownIcon
               className="h-5 w-5 mr-2"
-              onClick={() => toggleExpand(item.id)}
+              onClick={(e) => { e.stopPropagation(); toggleExpand(item.id); }}
             />
           ) : (
             <ChevronRightIcon
               className="h-5 w-5 mr-2"
-              onClick={() => toggleExpand(item.id)}
+              onClick={(e) => { e.stopPropagation(); toggleExpand(item.id); }}
             />
           )
         ) : (
-          <div className="w-5 mr-2" /> 
+          <div className="w-5 mr-2" />
         )}
         <span>{item.name}</span>
         <PlusIcon
@@ -55,6 +57,8 @@ export const InsideMenuItem = ({
               expanded={expanded}
               toggleExpand={toggleExpand}
               onAddNewMenu={onAddNewMenu}
+              onMenuItemClick={onMenuItemClick}
+              onAddNewClick={onAddNewClick}
             />
           ))}
         </div>

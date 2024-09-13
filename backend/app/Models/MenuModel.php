@@ -14,9 +14,7 @@ class MenuModel extends Model
 
     public function saveMenu($data)
     {
-        if (!isset($data['id'])) {
-            $data['id'] = Uuid::uuid4()->toString();
-        }
+        $data['id'] = Uuid::uuid4()->toString();
 
         return $this->insert($data);
     }
